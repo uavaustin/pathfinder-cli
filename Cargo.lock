@@ -27,6 +27,7 @@ dependencies = [
 [[package]]
 name = "pathfinder"
 version = "1.1.0"
+source = "git+https://github.com/uavaustin/pathfinder.git#2623ea2fc9e873459978aef7012ad9f5562c20ed"
 dependencies = [
  "ordered-float",
 ]
