@@ -1,5 +1,13 @@
+use clap;
+
 fn main() {
-    println!("Hello, world!");
+    // Load subcommands, options, etc. from YAML file
+    let yaml = clap::load_yaml!("cli.yaml");
+    // Get subcommands, options, etc. used in the command line
+    let matches = clap::App::from_yaml(yaml).get_matches();
+    if matches.subcommand_name().is_none() {
+        println!("Hello world!");
+    }
 }
 
 #[cfg(test)]
