@@ -1,0 +1,49 @@
+/*
+ * Pathfinder message definitions
+ *
+ * All units are in meters, seconds, degrees unless otherwise specified
+ *
+ */
+
+syntax = "proto3";
+
+package pathfinder;
+
+message Mission {
+  double time = 1;
+  repeated Waypoint waypoints = 2;
+}
+
+message Waypoint {
+  Position pos = 1;
+  double altitude = 2;
+}
+
+message Plane {
+  double time = 1;
+  Position pos = 2;
+  double altitude = 3;
+}
+
+message FlightField {
+  double time = 1;
+  repeated Flyzone flyzones = 2;
+  repeated Obstacle obstacles = 3;
+}
+
+message Obstacle {
+  Position pos = 1;
+  double height = 2;
+  double radius = 3;
+}
+
+message Flyzone {
+  double alt_msl_max = 1;
+  double alt_msl_min = 2;
+  repeated Position boundary = 3;
+}
+
+message Position {
+  double lat = 1;
+  double lon = 2;
+}
