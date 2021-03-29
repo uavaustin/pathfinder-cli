@@ -1,5 +1,4 @@
 use prost::Message;
-use std::io::{BufRead, Read, Write};
 
 /// A collection of protobuffers used
 pub mod protos {
@@ -24,9 +23,31 @@ fn main() {
     let yaml = clap::load_yaml!("cli.yaml");
     // Get subcommands, options, etc. used in the command line
     let matches = clap::App::from_yaml(yaml).get_matches();
-    if matches.subcommand_name().is_none() {
-        println!("Hello world!");
-    }
+    // if matches.subcommand_name().is_none() {
+    //     println!("Hello world!");
+    // }
+
+    // TODO: Properly handle all these .unwrap()s
+    let mut buffer = String::new();
+    std::io::stdin().read_line(&mut buffer).unwrap();
+
+    // Convert hexadecimal string back into bytes and decode bytes into FlightField proto
+    let ff_received_hex = hex::decode(&buffer).unwrap();
+    let ff_received = protos::FlightField::decode(bytes::Bytes::from(ff_received_hex)).unwrap();
+
+    buffer.clear();
+    std::io::stdin().read_line(&mut buffer).unwrap();
+
+    // Convert hexadecimal string back into bytes and decode bytes into Plane proto
+    let plane_received_hex = hex::decode(&buffer).unwrap();
+    let plane_received = protos::Plane::decode(bytes::Bytes::from(plane_received_hex)).unwrap();
+
+    buffer.clear();
+    std::io::stdin().read_line(&mut buffer).unwrap();
+
+    // Convert hexadecimal string back into bytes and decode bytes into Mission proto
+    let mission_received_hex = hex::decode(&buffer).unwrap();
+    let mission_received = protos::Mission::decode(bytes::Bytes::from(mission_received_hex)).unwrap();
 }
 
 #[cfg(test)]
@@ -150,9 +171,5 @@ mod tests {
             protos::Mission::decode(bytes::Bytes::from(mission_received_hex)).unwrap();
 
         assert_eq!(mission, mission_received);
-        // Also you need to try to set up the cli to take in the mission (possibly separately, but
-        // could also ask Chase about having a Mission proto that wraps up everything) inline (like
-        // as an argument) as a string of hexadecimals, but that should possibly be changed to
-        // be a live connection at some point.
     }
 }
