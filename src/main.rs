@@ -1,4 +1,5 @@
 use prost::Message;
+use std::io::Write;
 
 /// A collection of protobuffers used
 pub mod protos {
@@ -27,12 +28,14 @@ fn main() {
     //     println!("Hello world!");
     // }
 
+    // Read input
     // TODO: Properly handle all these .unwrap()s
     let mut buffer = String::new();
     std::io::stdin().read_line(&mut buffer).unwrap();
 
     // Convert hexadecimal string back into bytes and decode bytes into FlightField proto
     let ff_received_hex = hex::decode(&buffer).unwrap();
+    let ff_received_DEBUG = ff_received_hex.clone(); // TODO: Remove once Tanstar is used
     let ff_received = protos::FlightField::decode(bytes::Bytes::from(ff_received_hex)).unwrap();
 
     buffer.clear();
@@ -40,6 +43,7 @@ fn main() {
 
     // Convert hexadecimal string back into bytes and decode bytes into Plane proto
     let plane_received_hex = hex::decode(&buffer).unwrap();
+    let plane_received_DEBUG = plane_received_hex.clone(); // TODO: Remove once Tanstar is used
     let plane_received = protos::Plane::decode(bytes::Bytes::from(plane_received_hex)).unwrap();
 
     buffer.clear();
@@ -47,7 +51,17 @@ fn main() {
 
     // Convert hexadecimal string back into bytes and decode bytes into Mission proto
     let mission_received_hex = hex::decode(&buffer).unwrap();
-    let mission_received = protos::Mission::decode(bytes::Bytes::from(mission_received_hex)).unwrap();
+    let mission_received_DEBUG = mission_received_hex.clone(); // TODO: Remove once Tanstar is used
+    let mission_received =
+        protos::Mission::decode(bytes::Bytes::from(mission_received_hex)).unwrap();
+
+    // TODO: Run Tanstar
+
+    // Send adjusted path
+    // TODO: Use Tanstar output
+    std::io::stdout().write(hex::encode(&ff_received_DEBUG).as_bytes());
+    std::io::stdout().write(hex::encode(&plane_received_DEBUG).as_bytes());
+    std::io::stdout().write(hex::encode(&mission_received_DEBUG).as_bytes());
 }
 
 #[cfg(test)]
@@ -65,7 +79,7 @@ mod tests {
     }
 
     #[test]
-    fn send_receive_message() {
+    fn create_and_read_message() {
         // Create and send Plane
         let plane = protos::Plane {
             time: 12.3,
