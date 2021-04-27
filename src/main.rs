@@ -64,8 +64,8 @@ fn convert_proto_raw_path(
         .filter(|w| w.pos.is_some())
         .map(|waypoint| {
             let pos = waypoint.pos.as_ref().unwrap();
-            // return pathfinder::Waypoint with 0 radius to iterator
-            pathfinder::Waypoint::from_degrees(pos.lon, pos.lat, waypoint.altitude as f32, 0.0)
+            // return pathfinder::Waypoint with radius of 1 meter to iterator
+            pathfinder::Waypoint::from_degrees(pos.lon, pos.lat, waypoint.altitude as f32, 1.0)
         })
         .collect()
 }
